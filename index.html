@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ассистент подготовки к встречам · GM / ALM</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f4f2ec;--panel:#fbfaf6;--ink:#1a1d21;--ink-soft:#4c5258;--ink-mute:#878d92;
+    --line:#e2ddd1;--line-strong:#cfc8b8;
+    --gm:#b85c38;--gm-soft:#f3e4dc;--gm-ink:#8f4022;
+    --alm:#1f7a6e;--alm-soft:#dcefec;--alm-ink:#155b52;
+    --shadow:0 1px 2px rgba(26,29,33,.05),0 10px 30px rgba(26,29,33,.07);
+    --sans:'Inter',system-ui,sans-serif;--disp:'Space Grotesk',var(--sans);--mono:'IBM Plex Mono',monospace;
+  }
+  *{box-sizing:border-box}html,body{margin:0}
+  body{font-family:var(--sans);background:var(--bg);color:var(--ink);line-height:1.55;-webkit-font-smoothing:antialiased;min-height:100vh}
+  .wrap{max-width:860px;margin:0 auto;padding:64px 24px 80px}
+  .kicker{font-family:var(--mono);font-size:12px;letter-spacing:1.5px;text-transform:uppercase;color:var(--ink-mute);margin-bottom:14px}
+  h1{font-family:var(--disp);font-weight:700;font-size:34px;line-height:1.1;margin:0 0 12px;letter-spacing:-.3px}
+  .lead{font-size:16px;color:var(--ink-soft);max-width:620px;margin:0 0 40px}
+  .cards{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  .card{display:flex;flex-direction:column;background:var(--panel);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);padding:26px;text-decoration:none;color:inherit;position:relative;overflow:hidden;transition:transform .18s,box-shadow .18s}
+  .card:hover{transform:translateY(-3px);box-shadow:0 6px 14px rgba(26,29,33,.08),0 18px 44px rgba(26,29,33,.12)}
+  .card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:5px}
+  .card.a::before{background:var(--gm)}.card.b::before{background:var(--alm)}
+  .tag{align-self:flex-start;font-size:11px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;padding:4px 10px;border-radius:7px;margin-bottom:16px}
+  .card.a .tag{background:var(--gm-soft);color:var(--gm-ink)}
+  .card.b .tag{background:var(--alm-soft);color:var(--alm-ink)}
+  .card h2{font-family:var(--disp);font-weight:600;font-size:20px;margin:0 0 8px;line-height:1.2}
+  .card p{font-size:14px;color:var(--ink-soft);margin:0 0 22px;flex:1}
+  .go{display:inline-flex;align-items:center;gap:8px;font-weight:600;font-size:14px}
+  .card.a .go{color:var(--gm-ink)}.card.b .go{color:var(--alm-ink)}
+  .go svg{transition:transform .18s}.card:hover .go svg{transform:translateX(4px)}
+  .foot{margin-top:42px;padding-top:22px;border-top:1px solid var(--line);font-size:12.5px;color:var(--ink-mute);display:flex;gap:16px;flex-wrap:wrap;align-items:center}
+  .foot a{color:var(--ink-soft)}
+  .dot{width:9px;height:9px;border-radius:50%;display:inline-block;vertical-align:0}
+  .dot.gm{background:var(--gm)}.dot.alm{background:var(--alm)}
+  @media (max-width:640px){.cards{grid-template-columns:1fr}h1{font-size:27px}.wrap{padding:44px 20px 64px}}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="kicker">Global Markets · ALM</div>
+    <h1>Ассистент подготовки к встречам</h1>
+    <p class="lead">Персональный инструмент для специалиста казначейства: ведёт список встреч с обратным отсчётом и формирует план подготовки аналитического материала по направлениям <b style="color:var(--gm-ink)">Global Markets</b> и <b style="color:var(--alm-ink)">ALM</b>.</p>
+
+    <div class="cards">
+      <a class="card a" href="meeting-prep-gm-alm.html">
+        <span class="tag">Режим A · Трекер</span>
+        <h2>Трекер встреч</h2>
+        <p>Список предстоящих встреч с напоминанием и авто-генерацией плана подготовки из 5 блоков по ключевым словам темы.</p>
+        <span class="go">Открыть <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+      </a>
+      <a class="card b" href="counterparty-meeting-brief.html">
+        <span class="tag">Режим B · Бриф</span>
+        <h2>Бриф к встрече с контрагентом</h2>
+        <p>Готовый бриф по фиксированной повестке (FX, ставки, ликвидность, Euroclear, индекс JP Morgan) с вопросами по линиям GM и ALM.</p>
+        <span class="go">Открыть <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+      </a>
+    </div>
+
+    <div class="foot">
+      <span><span class="dot gm"></span> Global Markets &nbsp;·&nbsp; <span class="dot alm"></span> ALM</span>
+      <span>Данные — справочные ориентиры, требуют актуализации перед встречей.</span>
+    </div>
+  </div>
+</body>
+</html>
