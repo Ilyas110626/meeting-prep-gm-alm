@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Бриф к встрече с контрагентом · GM / ALM</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f4f2ec; --panel:#fbfaf6; --panel-2:#f0eee6;
+    --ink:#1a1d21; --ink-soft:#4c5258; --ink-mute:#878d92;
+    --line:#e2ddd1; --line-strong:#cfc8b8;
+    --gm:#b85c38; --gm-soft:#f3e4dc; --gm-ink:#8f4022; --gm-line:#e2b9a6;
+    --alm:#1f7a6e; --alm-soft:#dcefec; --alm-ink:#155b52; --alm-line:#a9d6cf;
+    --crit:#c1352b; --crit-soft:#f6e0de;
+    --warn:#b67410; --warn-soft:#f6ecd6;
+    --radius:14px; --radius-sm:9px;
+    --shadow:0 1px 2px rgba(26,29,33,.05),0 8px 24px rgba(26,29,33,.06);
+    --sans:'Inter',system-ui,sans-serif;
+    --disp:'Space Grotesk',var(--sans);
+    --mono:'IBM Plex Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{font-family:var(--sans);background:var(--bg);color:var(--ink);line-height:1.5;-webkit-font-smoothing:antialiased}
+  ::selection{background:var(--gm-soft)}
+
+  /* ---------- Header / brief banner ---------- */
+  header{position:sticky;top:0;z-index:20;background:#14171c;color:#eceae3;border-bottom:1px solid #000}
+  .head-in{max-width:1000px;margin:0 auto;padding:13px 24px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+  .brand{display:flex;flex-direction:column;gap:2px;margin-right:auto}
+  .brand .t{font-family:var(--disp);font-weight:600;font-size:16px;letter-spacing:.2px}
+  .brand .s{font-size:11px;color:#9aa0a6;letter-spacing:.4px;text-transform:uppercase}
+  .clock{font-family:var(--mono);text-align:right;line-height:1.2}
+  .clock .time{font-size:17px;font-weight:600;letter-spacing:1px}
+  .clock .date{font-size:11px;color:#9aa0a6}
+
+  main{max-width:1000px;margin:0 auto;padding:24px 24px 90px}
+
+  /* brief card */
+  .brief{
+    background:linear-gradient(180deg,var(--panel),var(--panel-2));
+    border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);
+    padding:22px 24px;margin-bottom:20px;position:relative;overflow:hidden;
+  }
+  .brief::after{content:"";position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--gm),var(--alm))}
+  .brief-top{display:flex;justify-content:space-between;align-items:flex-start;gap:18px;flex-wrap:wrap}
+  .brief-kicker{font-size:11px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--ink-mute)}
+  .brief h1{font-family:var(--disp);font-weight:700;font-size:25px;margin:6px 0 2px;line-height:1.12}
+  .brief-cp{color:var(--gm-ink);font-weight:700}
+  .brief-meta{display:flex;gap:22px;flex-wrap:wrap;margin-top:14px}
+  .bm{display:flex;flex-direction:column;gap:2px}
+  .bm .l{font-size:10.5px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;color:var(--ink-mute)}
+  .bm .v{font-size:14px;font-weight:600;font-family:var(--mono)}
+  .bm .v.txt{font-family:var(--sans)}
+
+  .cd-box{display:flex;flex-direction:column;align-items:flex-end;gap:8px;min-width:160px}
+  .cd{font-family:var(--mono);font-size:14px;font-weight:600;padding:9px 14px;border-radius:10px;white-space:nowrap;border:1px solid transparent;text-align:center}
+  .cd-lbl{font-size:10px;letter-spacing:.6px;text-transform:uppercase;color:var(--ink-mute);font-weight:600}
+  .cd.neutral{background:var(--panel);color:var(--ink-soft);border-color:var(--line-strong)}
+  .cd.warn{background:var(--warn-soft);color:var(--warn);border-color:#e7d3a6}
+  .cd.crit{background:var(--crit-soft);color:var(--crit);border-color:#eebcb8}
+  .cd.live{background:var(--alm-soft);color:var(--alm-ink);border-color:#aed9d2}
+  .cd.muted{background:transparent;color:var(--ink-mute);border-color:var(--line)}
+  .cd.crit::before,.cd.live::before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:currentColor;margin-right:7px;vertical-align:1px;animation:pulse 1.6s ease-in-out infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+  .brief-actions{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap}
+
+  .btn{font-family:var(--sans);font-weight:600;font-size:13px;cursor:pointer;border-radius:9px;padding:9px 14px;border:1px solid transparent;display:inline-flex;align-items:center;gap:7px;transition:filter .15s,background .15s,color .15s}
+  .btn-primary{background:var(--ink);color:#fff}
+  .btn-primary:hover{filter:brightness(1.18)}
+  .btn-ghost{background:var(--panel);border-color:var(--line-strong);color:var(--ink-soft)}
+  .btn-ghost:hover{color:var(--ink);background:var(--panel-2)}
+  .btn-sm{padding:6px 11px;font-size:12px;border-radius:8px}
+
+  /* warning banner */
+  .warn-banner{
+    display:flex;gap:11px;align-items:flex-start;
+    background:var(--warn-soft);border:1px solid #e7d3a6;border-radius:12px;
+    padding:13px 16px;margin-bottom:18px;font-size:13px;color:#7a5410;
+  }
+  .warn-banner b{color:#5e3f0a}
+  .warn-banner svg{flex:none;margin-top:1px;color:var(--warn)}
+
+  /* filter */
+  .filterbar{display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap}
+  .filterbar .hint{font-size:12px;color:var(--ink-mute);margin-right:auto}
+  .seg-filter{display:flex;gap:5px;background:var(--panel-2);padding:4px;border-radius:11px;border:1px solid var(--line)}
+  .seg-filter button{border:0;background:transparent;cursor:pointer;font-family:var(--sans);font-size:12.5px;font-weight:500;color:var(--ink-soft);padding:7px 13px;border-radius:8px;display:flex;align-items:center;gap:7px;transition:background .15s,color .15s}
+  .seg-filter button:hover{color:var(--ink)}
+  .seg-filter button[aria-selected="true"]{background:var(--panel);color:var(--ink);box-shadow:var(--shadow)}
+  .seg-filter .dot{width:8px;height:8px;border-radius:50%}
+  .seg-filter button[data-f="gm"] .dot{background:var(--gm)}
+  .seg-filter button[data-f="alm"] .dot{background:var(--alm)}
+
+  /* ---------- Topic cards ---------- */
+  .topics{display:flex;flex-direction:column;gap:13px}
+  .topic{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
+  .t-head{display:grid;grid-template-columns:auto 1fr auto;gap:15px;align-items:center;padding:16px 18px;cursor:pointer}
+  .t-head:focus-visible{outline:2px solid var(--ink);outline-offset:-2px}
+  .t-num{font-family:var(--mono);font-weight:600;font-size:20px;color:var(--ink-mute);letter-spacing:.5px}
+  .t-titles h3{font-family:var(--disp);font-weight:600;font-size:16.5px;margin:0;line-height:1.2}
+  .t-titles .en{font-size:12px;color:var(--ink-mute);font-style:italic;margin-top:2px}
+  .t-right{display:flex;align-items:center;gap:12px}
+  .lines{display:flex;gap:5px}
+  .line-tag{font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;padding:3px 7px;border-radius:5px}
+  .line-tag.gm{background:var(--gm-soft);color:var(--gm-ink)}
+  .line-tag.alm{background:var(--alm-soft);color:var(--alm-ink)}
+  .chev{color:var(--ink-mute);transition:transform .2s}
+  .topic.open .chev{transform:rotate(90deg)}
+
+  .t-body{display:none;border-top:1px solid var(--line);background:var(--panel-2);padding:4px 18px 18px}
+  .topic.open .t-body{display:block}
+  .topic.dim{opacity:.5}
+
+  .sec{padding:15px 0;border-top:1px solid var(--line)}
+  .sec:first-child{border-top:0}
+  .sec-h{font-size:11px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:var(--ink-mute);margin:0 0 9px;display:flex;align-items:center;gap:7px}
+  .sec ul{margin:0;padding-left:18px}
+  .sec li{font-size:13.5px;color:var(--ink-soft);margin:5px 0}
+
+  .figures{display:flex;flex-wrap:wrap;gap:9px}
+  .fig{background:var(--panel);border:1px solid var(--line-strong);border-radius:9px;padding:8px 12px;display:flex;flex-direction:column;gap:1px;min-width:110px}
+  .fig .k{font-size:10.5px;color:var(--ink-mute);font-weight:600;letter-spacing:.2px}
+  .fig .v{font-family:var(--mono);font-size:15px;font-weight:600;color:var(--ink)}
+
+  .q-grid{display:grid;grid-template-columns:1fr;gap:13px}
+  .q-col{border-radius:11px;padding:13px 14px;border:1px solid}
+  .q-col.gm{background:var(--gm-soft);border-color:var(--gm-line)}
+  .q-col.alm{background:var(--alm-soft);border-color:var(--alm-line)}
+  .q-col .q-h{font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+  .q-col.gm .q-h{color:var(--gm-ink)}
+  .q-col.alm .q-h{color:var(--alm-ink)}
+  .q-col .q-h .dot{width:8px;height:8px;border-radius:50%}
+  .q-col.gm .q-h .dot{background:var(--gm)}
+  .q-col.alm .q-h .dot{background:var(--alm)}
+  .q-col ul{margin:0;padding-left:17px}
+  .q-col li{font-size:13px;margin:6px 0;color:var(--ink-soft)}
+
+  .rec{background:var(--ink);color:#f0efe9;border-radius:11px;padding:13px 15px;display:flex;gap:11px;align-items:flex-start}
+  .rec svg{flex:none;margin-top:2px;color:#c8c4b8}
+  .rec .rt{font-size:11px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:#a8a499;margin-bottom:3px}
+  .rec p{margin:0;font-size:13.5px;line-height:1.5}
+
+  .t-foot{display:flex;justify-content:flex-end;padding-top:14px}
+
+  /* sources */
+  .sources{margin-top:26px;background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:18px 20px}
+  .sources h4{font-family:var(--disp);font-weight:600;font-size:14px;margin:0 0 12px;display:flex;align-items:center;gap:8px}
+  .sources ul{margin:0;padding:0;list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:9px 22px}
+  .sources li{font-size:12.5px;color:var(--ink-soft);display:flex;gap:8px;align-items:flex-start}
+  .sources li b{color:var(--ink);font-weight:600}
+  .sources .src-dot{width:6px;height:6px;border-radius:50%;background:var(--line-strong);margin-top:6px;flex:none}
+
+  /* modal */
+  .scrim{position:fixed;inset:0;background:rgba(20,23,28,.55);display:none;z-index:40;backdrop-filter:blur(2px)}
+  .scrim.show{display:flex;align-items:flex-start;justify-content:center;padding:40px 18px;overflow:auto}
+  .modal{background:var(--panel);border-radius:16px;width:100%;max-width:480px;box-shadow:0 20px 60px rgba(0,0,0,.3);border:1px solid var(--line)}
+  .modal-head{padding:20px 22px 0;display:flex;align-items:center;justify-content:space-between}
+  .modal-head h2{font-family:var(--disp);font-weight:600;font-size:18px;margin:0}
+  .x{border:0;background:var(--panel-2);width:32px;height:32px;border-radius:8px;cursor:pointer;color:var(--ink-soft);font-size:16px}
+  .x:hover{background:var(--line)}
+  form{padding:18px 22px 22px;display:flex;flex-direction:column;gap:14px}
+  .field{display:flex;flex-direction:column;gap:6px}
+  .field label{font-size:12px;font-weight:600;color:var(--ink-soft)}
+  .field input{font-family:var(--sans);font-size:14px;color:var(--ink);border:1px solid var(--line-strong);border-radius:9px;padding:10px 12px;background:#fff;width:100%;transition:border-color .15s,box-shadow .15s}
+  .field input:focus{outline:0;border-color:var(--ink);box-shadow:0 0 0 3px rgba(26,29,33,.08)}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .form-foot{display:flex;gap:10px;margin-top:4px}
+  .form-foot .btn-primary{margin-left:auto}
+
+  .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;padding:11px 18px;border-radius:10px;font-size:13px;font-weight:500;opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;z-index:60;box-shadow:0 10px 30px rgba(0,0,0,.25)}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+  @media (max-width:680px){
+    .q-grid{grid-template-columns:1fr}
+    .sources ul{grid-template-columns:1fr}
+    .t-head{grid-template-columns:auto 1fr;grid-template-areas:"num title" "lines lines"}
+    .t-num{grid-area:num}.t-titles{grid-area:title}.t-right{grid-area:lines;justify-content:space-between;margin-top:4px}
+    .brief h1{font-size:21px}
+    .cd-box{align-items:flex-start;min-width:0}
+    .row{grid-template-columns:1fr}
+  }
+  @media (prefers-reduced-motion:reduce){*{animation:none !important;transition:none !important}}
+  svg{flex:none}
+</style>
+</head>
+<body>
+<header>
+  <div class="head-in">
+    <div class="brand">
+      <span class="t">Бриф к встрече с контрагентом</span>
+      <span class="s">Global Markets · ALM — Режим B</span>
+    </div>
+    <div class="clock">
+      <div class="time" id="clkTime">—</div>
+      <div class="date" id="clkDate">—</div>
+    </div>
+  </div>
+</header>
+
+<main>
+  <!-- Brief header -->
+  <section class="brief">
+    <div class="brief-top">
+      <div>
+        <div class="brief-kicker">Подготовка к переговорам</div>
+        <h1>Встреча с <span class="brief-cp" id="bCp">—</span></h1>
+        <div class="brief-meta">
+          <div class="bm"><span class="l">Дата</span><span class="v" id="bDate">—</span></div>
+          <div class="bm"><span class="l">Время</span><span class="v" id="bTime">—</span></div>
+          <div class="bm"><span class="l">Участники контрагента</span><span class="v txt" id="bAtt">—</span></div>
+        </div>
+      </div>
+      <div class="cd-box">
+        <span class="cd-lbl">До встречи</span>
+        <span class="cd neutral" id="bCd">—</span>
+      </div>
+    </div>
+    <div class="brief-actions">
+      <button class="btn btn-ghost" id="editBtn">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+        Изменить детали встречи
+      </button>
+      <button class="btn btn-primary" id="copyAll">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>
+        Копировать весь бриф
+      </button>
+    </div>
+  </section>
+
+  <div class="warn-banner">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v4M12 17h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/></svg>
+    <div><b>Цифры — справочные ориентиры</b> на дату источников и требуют актуализации перед встречей: USD/KZT, доходности ГЦБ, базовая ставка и последние решения регулятора могли измениться.</div>
+  </div>
+
+  <div class="filterbar">
+    <span class="hint">Бриф разделён по линиям — выберите направление для фокусной проработки.</span>
+    <div class="seg-filter" role="tablist" aria-label="Линия направления">
+      <button role="tab" data-f="gm" aria-selected="true"><span class="dot"></span>Global Markets</button>
+      <button role="tab" data-f="alm" aria-selected="false"><span class="dot"></span>ALM</button>
+    </div>
+  </div>
+
+  <div class="topics" id="topics"></div>
+
+  <section class="sources">
+    <h4>
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2Z"/></svg>
+      Источники для проверки и актуализации данных
+    </h4>
+    <ul id="srcList"></ul>
+  </section>
+</main>
+
+<!-- Edit modal -->
+<div class="scrim" id="scrim">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="mTitle">
+    <div class="modal-head">
+      <h2 id="mTitle">Детали встречи</h2>
+      <button class="x" id="closeM" aria-label="Закрыть">✕</button>
+    </div>
+    <form id="form">
+      <div class="field">
+        <label for="f-cp">Банк-контрагент</label>
+        <input id="f-cp" required placeholder="Напр.: банк-контрагент" autocomplete="off">
+      </div>
+      <div class="row">
+        <div class="field"><label for="f-date">Дата</label><input id="f-date" type="date" required></div>
+        <div class="field"><label for="f-time">Время</label><input id="f-time" type="time" required></div>
+      </div>
+      <div class="field">
+        <label for="f-att">Участники со стороны контрагента</label>
+        <input id="f-att" placeholder="Напр.: Head of EM Rates, Sales" autocomplete="off">
+      </div>
+      <div class="form-foot">
+        <button type="button" class="btn btn-ghost" id="cancelM">Отмена</button>
+        <button type="submit" class="btn btn-primary">Сохранить</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+"use strict";
+
+/* ============ Storage ============ */
+const KEY="cb_detail_v1";
+const store=(()=>{ let mem=null,ok=true;
+  try{const t="__t";localStorage.setItem(t,"1");localStorage.removeItem(t);}catch(e){ok=false;}
+  return{ load(){ if(ok){try{return JSON.parse(localStorage.getItem(KEY)||"null");}catch(e){}} return mem; },
+    save(v){ if(ok){try{localStorage.setItem(KEY,JSON.stringify(v));return;}catch(e){}} mem=v; } };
+})();
+
+/* ============ Agenda content (v1.0) ============ */
+const TOPICS=[
+  {
+    id:"fx", num:"01",
+    title:"Взгляд на FX и динамику локального рынка",
+    en:"View on FX and local market dynamics",
+    lines:["gm","alm"],
+    position:[
+      "USD/KZT торгуется в диапазоне, ключевой драйвер — нефть, ставки ФРС и сезонность валютной выручки экспортёров.",
+      "Регулятор сглаживает чрезмерную волатильность; режим — управляемое плавание, без таргетирования уровня.",
+      "Спрос на тенговую ликвидность и налоговые периоды формируют краткосрочные движения курса."
+    ],
+    figures:[
+      {k:"USD/KZT (ориентир)",v:"≈ 480–490"},
+      {k:"Реализ. волатильность",v:"≈ 8–10%"},
+      {k:"Brent (контекст)",v:"≈ $70–80"}
+    ],
+    qGM:[
+      "Как вы видите траекторию USD/KZT на горизонте 3–6 мес?",
+      "Ваш взгляд на ликвидность локального FX-рынка и спреды?",
+      "Готовы ли котировать форварды/NDF и на какие сроки?"
+    ],
+    qALM:[
+      "Как валютная волатильность влияет на стоимость хеджирования баланса?",
+      "Доступность валютного фондирования и его срочность?",
+      "Какие лимиты на нашу страну/банк по валютным операциям?"
+    ],
+    rec:"Дать сбалансированный взгляд: диапазонная динамика курса при поддержке регулятора; подчеркнуть устойчивость локального рынка и интерес к маркет-мейкингу по форвардам."
+  },
+  {
+    id:"rate", num:"02",
+    title:"Ожидания по ставке и обменному курсу",
+    en:"Policy rate and FX expectations",
+    lines:["gm","alm"],
+    position:[
+      "Базовая ставка отражает баланс инфляции и поддержки тенге; цикл — вблизи пика с возможным разворотом при замедлении инфляции.",
+      "Кривая ГЦБ закладывает постепенное снижение ставок; премия за срок умеренная.",
+      "Курс и ставка взаимосвязаны: преждевременное смягчение усиливает давление на тенге."
+    ],
+    figures:[
+      {k:"Базовая ставка (ориентир)",v:"≈ 14–15%"},
+      {k:"Инфляция (г/г)",v:"≈ 8–9%"},
+      {k:"Доходность ГЦБ 1–3 г.",v:"≈ 13–14%"}
+    ],
+    qGM:[
+      "Каков ваш прогноз по траектории базовой ставки до конца года?",
+      "Где видите справедливый уровень кривой ГЦБ и точки входа?",
+      "Как оцениваете carry в тенге с поправкой на хедж?"
+    ],
+    qALM:[
+      "Как ожидания по ставке влияют на ваш профиль IRRBB (EVE/NII)?",
+      "Какой репрайсинг-гэп вы закладываете в фондировании?",
+      "Какая чувствительность чистого процентного дохода к ±200 б.п.?"
+    ],
+    rec:"Позиционировать ставку у пика цикла с осторожным смягчением; увязать с привлекательностью carry и управляемостью процентного риска баланса."
+  },
+  {
+    id:"liq", num:"03",
+    title:"Ликвидность и система первичного дилерства",
+    en:"Liquidity and the primary dealership system",
+    lines:["alm","gm"],
+    position:[
+      "Система первичных дилеров обеспечивает регулярность аукционов Минфина и развитие вторичного рынка ГЦБ.",
+      "Структурный профицит/дефицит тенговой ликвидности абсорбируется инструментами регулятора (ноты, депо-аукционы).",
+      "Глубина вторичного рынка растёт, но ликвидность концентрирована в отдельных выпусках."
+    ],
+    figures:[
+      {k:"Ноты регулятора",v:"осн. инструмент"},
+      {k:"Аукционы Минфина",v:"регулярные"},
+      {k:"Статус ПД",v:"действующий"}
+    ],
+    qGM:[
+      "Как вы оцениваете ликвидность вторичного рынка ГЦБ и bid/ask?",
+      "В каких выпусках видите наибольшую активность нерезидентов?",
+      "Готовы ли поддерживать двусторонние котировки как маркет-мейкер?"
+    ],
+    qALM:[
+      "Как устроено управление структурной ликвидностью на рынке?",
+      "Какова роль инструментов регулятора в вашем LCR/NSFR?",
+      "Доступ к РЕПО под ГЦБ и условия фондирования?"
+    ],
+    rec:"Подчеркнуть зрелость инфраструктуры первичного дилерства и предсказуемость аукционов; обозначить интерес к расширению вторичной ликвидности и РЕПО."
+  },
+  {
+    id:"euroclear", num:"04",
+    title:"Предстоящее внедрение Euroclear",
+    en:"Upcoming Euroclear integration",
+    lines:["gm","alm"],
+    position:[
+      "Подключение локальных ГЦБ к Euroclear (direct link / DVP) снижает барьеры доступа для глобальных инвесторов.",
+      "Ожидаемый эффект — приток нерезидентов, сужение спредов и снижение стоимости заимствований.",
+      "Реализация поэтапная; ключевые вопросы — расчётная инфраструктура, налоги и репатриация."
+    ],
+    figures:[
+      {k:"Механизм",v:"direct link / DVP"},
+      {k:"Инфраструктура",v:"KCSD ↔ Euroclear"},
+      {k:"Статус",v:"подготовка"}
+    ],
+    qGM:[
+      "Как вы оцениваете влияние Euroclear на спреды и приток капитала?",
+      "Какой объём нового спроса нерезидентов закладываете?",
+      "Планируете ли расширять покрытие локальных ГЦБ после запуска?"
+    ],
+    qALM:[
+      "Как изменится стоимость и срочность внешнего фондирования?",
+      "Влияние на структуру держателей долга и стабильность базы?",
+      "Операционные/расчётные риски на переходный период?"
+    ],
+    rec:"Представить Euroclear как структурный позитив для доступа и стоимости заимствований; быть готовым обсудить этапность и операционные детали перехода."
+  },
+  {
+    id:"jpm", num:"05",
+    title:"Возможное включение в индекс локальных облигаций JP Morgan",
+    en:"Potential inclusion in the JP Morgan local-currency bond index",
+    lines:["gm","alm"],
+    position:[
+      "Включение в GBI-EM зависит от критериев доступности рынка, ликвидности и расчётной инфраструктуры (в т.ч. Euroclear).",
+      "Включение влечёт пассивный приток средств индексных фондов и переоценку справедливой доходности.",
+      "Ключевые предпосылки — свобода движения капитала, репатриация и операционная готовность."
+    ],
+    figures:[
+      {k:"Индекс",v:"GBI-EM (J.P. Morgan)"},
+      {k:"Критерии",v:"доступ · ликвидность"},
+      {k:"Драйвер",v:"Euroclear / FX-доступ"}
+    ],
+    qGM:[
+      "Каковы реалистичные сроки и вероятность включения в индекс?",
+      "Оценка пассивного притока и эффекта на доходности?",
+      "Какие выпуски наиболее вероятно пройдут по критериям?"
+    ],
+    qALM:[
+      "Как индексный приток повлияет на стоимость и план фондирования?",
+      "Устойчивость такой базы инвесторов к risk-off эпизодам?",
+      "Влияние на валютную структуру долга и хеджирование?"
+    ],
+    rec:"Связать перспективу включения с реформами доступа (Euroclear, FX); подчеркнуть потенциал снижения доходностей при контроле рисков волатильной индексной базы."
+  }
+];
+
+const SOURCES=[
+  {b:"Национальный Банк РК",t:"базовая ставка, официальный курс, инфляция, инструменты ликвидности"},
+  {b:"Министерство финансов РК",t:"план первичного дилерства, календарь и параметры эмиссии ГЦБ"},
+  {b:"Euroclear / KCSD",t:"статус расчётной инфраструктуры (direct link, DVP)"},
+  {b:"J.P. Morgan Index Research",t:"методология и критерии индекса GBI-EM"},
+  {b:"ЕАБР, S&P Global",t:"прогнозы по обменному курсу и базовой ставке"}
+];
+
+/* ============ Default detail ============ */
+function defaultDetail(){
+  const d=new Date(); d.setDate(d.getDate()+4); d.setHours(15,0,0,0);
+  return { cp:"контрагентом",
+    dt:`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T15:00`,
+    att:"Head of EM Rates, FX Sales" };
+}
+let detail = store.load() || (()=>{ const d=defaultDetail(); store.save(d); return d; })();
+// миграция старых дефолтных значений → грамматически верный заголовок
+if(["Контрагент","Crédit Agricole CIB"].includes(detail.cp)){ detail.cp="контрагентом"; store.save(detail); }
+
+/* ============ Helpers ============ */
+const $=s=>document.querySelector(s);
+function pad(n){return String(n).padStart(2,"0");}
+const RU_DAYS=["воскресенье","понедельник","вторник","среда","четверг","пятница","суббота"];
+const RU_MON=["января","февраля","марта","апреля","мая","июня","июля","августа","сентября","октября","ноября","декабря"];
+const RU_DAYS_SH=["вс","пн","вт","ср","чт","пт","сб"];
+function parseDT(s){const[d,t]=s.split("T");const[Y,M,D]=d.split("-").map(Number);const[h,mi]=t.split(":").map(Number);return new Date(Y,M-1,D,h,mi,0,0);}
+function sameDay(a,b){return a.getFullYear()===b.getFullYear()&&a.getMonth()===b.getMonth()&&a.getDate()===b.getDate();}
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+
+function countdown(dt,now){
+  const diff=dt-now,min=Math.round(diff/60000),ONGOING=90;
+  if(diff<=0){ return min>-ONGOING?{text:"идёт сейчас",cls:"live"}:{text:"завершена",cls:"muted"}; }
+  if(min<60) return {text:`через ${min} мин`,cls:"crit"};
+  if(sameDay(dt,now)){const h=Math.floor(min/60),mm=min%60;return{text:`сегодня · через ${h} ч ${pad(mm)} мин`,cls:"warn"};}
+  const tmr=new Date(now);tmr.setDate(now.getDate()+1);
+  if(sameDay(dt,tmr))return{text:`завтра в ${pad(dt.getHours())}:${pad(dt.getMinutes())}`,cls:"neutral"};
+  const days=Math.ceil((dt-new Date(now.getFullYear(),now.getMonth(),now.getDate()))/86400000);
+  return{text:`через ${days} дн`,cls:"neutral"};
+}
+
+let toastT;
+function toast(msg){const t=$("#toast");t.textContent=msg;t.classList.add("show");clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove("show"),1900);}
+async function copy(text){try{await navigator.clipboard.writeText(text);return true;}catch(e){try{const ta=document.createElement("textarea");ta.value=text;ta.style.position="fixed";ta.style.opacity="0";document.body.appendChild(ta);ta.select();document.execCommand("copy");ta.remove();return true;}catch(_){return false;}}}
+
+/* ============ State ============ */
+let filter="gm";
+const openIds=new Set(TOPICS.map(t=>t.id));
+
+/* ============ Render brief header ============ */
+function renderBrief(){
+  const dt=parseDT(detail.dt);
+  $("#bCp").textContent=detail.cp||"—";
+  $("#bDate").textContent=`${RU_DAYS_SH[dt.getDay()]}, ${dt.getDate()} ${RU_MON[dt.getMonth()]}`;
+  $("#bTime").textContent=`${pad(dt.getHours())}:${pad(dt.getMinutes())}`;
+  $("#bAtt").textContent=detail.att||"—";
+  const cd=countdown(dt,new Date());
+  const el=$("#bCd"); el.textContent=cd.text; el.className=`cd ${cd.cls}`;
+}
+
+/* ============ Render topics ============ */
+const lineTag=l=>`<span class="line-tag ${l}">${l==="gm"?"GM":"ALM"}</span>`;
+function renderTopics(){
+  const host=$("#topics");
+  const visible=TOPICS.filter(t=>t.lines.includes(filter));
+  host.innerHTML=visible.map(t=>{
+    const open=openIds.has(t.id);
+    return `
+    <article class="topic ${open?'open':''}" data-id="${t.id}">
+      <div class="t-head" role="button" tabindex="0" aria-expanded="${open}" data-act="toggle">
+        <span class="t-num">${t.num}</span>
+        <div class="t-titles">
+          <h3>${esc(t.title)}</h3>
+          <div class="en">${esc(t.en)}</div>
+        </div>
+        <div class="t-right">
+          <span class="lines">${t.lines.map(lineTag).join("")}</span>
+          <svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M9 6l6 6-6 6"/></svg>
+        </div>
+      </div>
+      ${open?renderTopicBody(t):''}
+    </article>`;
+  }).join("");
+}
+
+function renderTopicBody(t){
+  const showGM = filter==="gm";
+  const showALM = filter==="alm";
+  return `<div class="t-body">
+    <div class="sec">
+      <p class="sec-h">Наша позиция и тезисы</p>
+      <ul>${t.position.map(p=>`<li>${esc(p)}</li>`).join("")}</ul>
+    </div>
+    <div class="sec">
+      <p class="sec-h">Ключевые цифры</p>
+      <div class="figures">${t.figures.map(f=>`<div class="fig"><span class="k">${esc(f.k)}</span><span class="v">${esc(f.v)}</span></div>`).join("")}</div>
+    </div>
+    <div class="sec">
+      <p class="sec-h">Возможные вопросы контрагента</p>
+      <div class="q-grid">
+        ${showGM?`<div class="q-col gm"><div class="q-h"><span class="dot"></span>Линия Global Markets</div><ul>${t.qGM.map(q=>`<li>${esc(q)}</li>`).join("")}</ul></div>`:''}
+        ${showALM?`<div class="q-col alm"><div class="q-h"><span class="dot"></span>Линия ALM</div><ul>${t.qALM.map(q=>`<li>${esc(q)}</li>`).join("")}</ul></div>`:''}
+      </div>
+    </div>
+    <div class="sec">
+      <div class="rec">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.3 1 2.1V18h6v-1.2c0-.8.4-1.6 1-2.1A7 7 0 0 0 12 2Z"/></svg>
+        <div><div class="rt">Рекомендуемый тезис в ответ</div><p>${esc(t.rec)}</p></div>
+      </div>
+    </div>
+    <div class="t-foot">
+      <button class="btn btn-ghost btn-sm" data-act="copyTopic">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>
+        Копировать тему
+      </button>
+    </div>
+  </div>`;
+}
+
+function renderSources(){
+  $("#srcList").innerHTML=SOURCES.map(s=>`<li><span class="src-dot"></span><span><b>${esc(s.b)}</b> — ${esc(s.t)}</span></li>`).join("");
+}
+
+/* ============ Copy text builders ============ */
+function topicText(t){
+  let o=`ТЕМА ${t.num}. ${t.title}\n(${t.en}) · линии: ${t.lines.map(l=>l.toUpperCase()).join(", ")}\n\n`;
+  o+=`НАША ПОЗИЦИЯ И ТЕЗИСЫ:\n`+t.position.map(p=>`  • ${p}`).join("\n")+"\n\n";
+  o+=`КЛЮЧЕВЫЕ ЦИФРЫ:\n`+t.figures.map(f=>`  • ${f.k}: ${f.v}`).join("\n")+"\n\n";
+  o+=`ВОЗМОЖНЫЕ ВОПРОСЫ — Global Markets:\n`+t.qGM.map(q=>`  • ${q}`).join("\n")+"\n\n";
+  o+=`ВОЗМОЖНЫЕ ВОПРОСЫ — ALM:\n`+t.qALM.map(q=>`  • ${q}`).join("\n")+"\n\n";
+  o+=`РЕКОМЕНДУЕМЫЙ ТЕЗИС В ОТВЕТ:\n  ${t.rec}\n`;
+  return o;
+}
+function briefText(){
+  const dt=parseDT(detail.dt);
+  let o=`БРИФ К ВСТРЕЧЕ С КОНТРАГЕНТОМ\n`;
+  o+=`Контрагент: ${detail.cp}\n`;
+  o+=`Дата/время: ${RU_DAYS[dt.getDay()]}, ${dt.getDate()} ${RU_MON[dt.getMonth()]} ${dt.getFullYear()}, ${pad(dt.getHours())}:${pad(dt.getMinutes())}\n`;
+  if(detail.att) o+=`Участники контрагента: ${detail.att}\n`;
+  o+=`\n!!! Цифры — справочные ориентиры на дату источников; актуализировать перед встречей.\n`;
+  o+=`\n${"=".repeat(48)}\n\n`;
+  o+=TOPICS.map(topicText).join(`\n${"-".repeat(48)}\n\n`);
+  o+=`\n${"=".repeat(48)}\nИСТОЧНИКИ ДЛЯ ПРОВЕРКИ:\n`+SOURCES.map(s=>`  • ${s.b} — ${s.t}`).join("\n")+"\n";
+  return o;
+}
+
+/* ============ Events ============ */
+$("#topics").addEventListener("click",e=>{
+  const card=e.target.closest(".topic"); if(!card) return;
+  const id=card.dataset.id, t=TOPICS.find(x=>x.id===id);
+  const act=e.target.closest("[data-act]")?.dataset.act;
+  if(act==="copyTopic"){ copy(topicText(t)).then(ok=>toast(ok?`Тема ${t.num} скопирована`:"Не удалось скопировать")); return; }
+  if(act==="toggle"){ openIds.has(id)?openIds.delete(id):openIds.add(id); renderTopics(); }
+});
+$("#topics").addEventListener("keydown",e=>{
+  if((e.key==="Enter"||e.key===" ")&&e.target.dataset.act==="toggle"){ e.preventDefault(); e.target.click(); }
+});
+
+document.querySelectorAll(".seg-filter button").forEach(b=>b.addEventListener("click",()=>{
+  filter=b.dataset.f;
+  document.querySelectorAll(".seg-filter button").forEach(x=>x.setAttribute("aria-selected",x===b));
+  renderTopics();
+}));
+
+$("#copyAll").onclick=()=>copy(briefText()).then(ok=>toast(ok?"Весь бриф скопирован в буфер":"Не удалось скопировать"));
+
+/* modal */
+const scrim=$("#scrim"),form=$("#form");
+function openModal(){
+  const dt=parseDT(detail.dt);
+  $("#f-cp").value=detail.cp;
+  $("#f-date").value=detail.dt.split("T")[0];
+  $("#f-time").value=detail.dt.split("T")[1];
+  $("#f-att").value=detail.att||"";
+  scrim.classList.add("show");
+  setTimeout(()=>$("#f-cp").focus(),50);
+}
+function closeModal(){scrim.classList.remove("show");}
+$("#editBtn").onclick=openModal;
+$("#closeM").onclick=closeModal; $("#cancelM").onclick=closeModal;
+scrim.addEventListener("click",e=>{if(e.target===scrim)closeModal();});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&scrim.classList.contains("show"))closeModal();});
+form.addEventListener("submit",e=>{
+  e.preventDefault();
+  detail={ cp:$("#f-cp").value.trim(), dt:`${$("#f-date").value}T${$("#f-time").value}`, att:$("#f-att").value.trim() };
+  store.save(detail);
+  closeModal(); renderBrief(); toast("Детали встречи сохранены");
+});
+
+/* ============ Clock + minute tick ============ */
+function tickClock(){const n=new Date();$("#clkTime").textContent=`${pad(n.getHours())}:${pad(n.getMinutes())}:${pad(n.getSeconds())}`;$("#clkDate").textContent=`${RU_DAYS[n.getDay()]}, ${n.getDate()} ${RU_MON[n.getMonth()]}`;}
+setInterval(tickClock,1000);tickClock();
+function scheduleMinute(){const now=new Date();const ms=(60-now.getSeconds())*1000-now.getMilliseconds();setTimeout(()=>{renderBrief();setInterval(renderBrief,60000);},ms);}
+
+/* ============ Boot ============ */
+renderBrief(); renderTopics(); renderSources(); scheduleMinute();
+</script>
+</body>
+</html>
